@@ -1,0 +1,285 @@
+/* =============================================================
+   Fulcrum AI Labs — Design Tokens
+   Colors + Typography + Spacing + Shape + Motion
+   ============================================================= */
+
+/* ---------- Fonts (Google Fonts, substituted from Calibri source) ----------
+   SUBSTITUTION NOTICE:
+   The source deck uses Calibri (Microsoft Office default). Calibri is not
+   web-licensed for free use, so we substitute Geist (Vercel, SIL OFL) as the
+   closest humanist-neutral sans. If the client has Calibri license files
+   (.ttf), drop them into /fonts and swap the font-family below.
+---------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+
+:root {
+  /* -------- Brand (primary) -------- */
+  --fulcrum-navy:        #003366;  /* primary anchor — deck titles, rules, marks */
+  --fulcrum-navy-deep:   #002244;  /* pressed / hover-deeper state */
+  --fulcrum-navy-soft:   #0A2A55;  /* section-fill backgrounds */
+  --fulcrum-forest:      #1A5C38;  /* accent — positive / "ready now" / confirm */
+  --fulcrum-forest-soft: #E8F0EC;  /* accent tint fill */
+  --fulcrum-forest-ring: #C0CCC4;  /* accent tint border */
+  --fulcrum-steel:       #336699;  /* secondary link / mid-tone anchor */
+  --fulcrum-steel-soft:  #CADCFC;  /* pale highlight tint */
+  --fulcrum-sand:        #F5F2EC;  /* warm off-white — section change-of-pace */
+
+  /* -------- Neutrals (editorial grayscale) -------- */
+  --ink-900: #0F1214;   /* max-contrast ink  (body on paper) */
+  --ink-800: #1A1A1A;   /* primary ink       (headlines on paper) */
+  --ink-700: #2C2F34;
+  --ink-600: #404040;   /* body-strong */
+  --ink-500: #666666;   /* body-muted, captions, metadata */
+  --ink-400: #8A8F96;
+  --ink-300: #B8BCC2;
+  --ink-200: #D9D9D9;   /* hairline dividers */
+  --ink-150: #E6E8EB;
+  --ink-100: #F0F1F3;
+  --ink-75:  #F5F7FA;   /* card fill on paper */
+  --ink-50:  #F7F7F7;   /* table stripe / subtle panel */
+  --paper:   #FFFFFF;
+
+  /* -------- Semantic -------- */
+  --fg:            var(--ink-800);
+  --fg-muted:      var(--ink-500);
+  --fg-subtle:     var(--ink-400);
+  --fg-strong:     var(--ink-900);
+  --fg-invert:     var(--paper);
+  --fg-accent:     var(--fulcrum-navy);
+  --fg-positive:   var(--fulcrum-forest);
+
+  --bg:            var(--paper);
+  --bg-soft:       var(--ink-75);
+  --bg-subtle:     var(--ink-50);
+  --bg-invert:     var(--fulcrum-navy);
+  --bg-invert-deep:var(--fulcrum-navy-deep);
+
+  --border:        var(--ink-200);
+  --border-strong: var(--ink-300);
+  --border-accent: var(--fulcrum-navy);
+
+  --tint-positive: var(--fulcrum-forest-soft);
+  --tint-info:     var(--fulcrum-steel-soft);
+
+  /* -------- Typography -------- */
+  --font-sans:    'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif:   'Newsreader', 'Times New Roman', Georgia, serif;
+  --font-mono:    'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Editorial type scale — small, tight, reader-friendly.
+     Mirrors deck sizes (8–15pt small, 28pt section, 120pt numeral) */
+  --fs-numeral:   96px;   /* chapter numerals */
+  --fs-display:   44px;   /* hero / cover line 1 */
+  --fs-display-2: 32px;   /* cover line 2 */
+  --fs-h1:        28px;   /* section opener */
+  --fs-h2:        20px;   /* slide / card title */
+  --fs-h3:        15px;   /* component heading */
+  --fs-body:      14px;   /* default body */
+  --fs-body-sm:   13px;
+  --fs-caption:   12px;
+  --fs-meta:      11px;   /* deck footer / metadata */
+  --fs-micro:     10px;   /* table cell / tag */
+
+  --lh-tight:     1.12;
+  --lh-snug:      1.25;
+  --lh-normal:    1.45;
+  --lh-loose:     1.6;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: -0.005em;
+  --tracking-wide:    0.02em;
+  --tracking-caps:    0.08em;   /* for SMALL-CAPS LABELS */
+
+  /* -------- Spacing (4-based, editorial density) -------- */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  32px;
+  --space-8:  40px;
+  --space-9:  56px;
+  --space-10: 72px;
+  --space-11: 96px;
+
+  /* -------- Radii (understated, mostly sharp) -------- */
+  --radius-0:    0;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-pill: 999px;
+
+  /* -------- Shadows (restrained — this is an editorial brand) -------- */
+  --shadow-0: none;
+  --shadow-1: 0 1px 0 rgba(15,18,20,0.04), 0 1px 2px rgba(15,18,20,0.06);
+  --shadow-2: 0 2px 4px rgba(15,18,20,0.06), 0 4px 12px rgba(15,18,20,0.05);
+  --shadow-3: 0 8px 24px rgba(15,18,20,0.08), 0 2px 6px rgba(15,18,20,0.05);
+  --shadow-inset: inset 0 0 0 1px var(--border);
+
+  /* -------- Motion -------- */
+  --ease-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --ease-emphasis: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --ease-exit:     cubic-bezier(0.4, 0.0, 1, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+
+  /* -------- Layout -------- */
+  --rule: 1px solid var(--border);
+  --rule-strong: 1px solid var(--fulcrum-navy);
+}
+
+/* ========================= Semantic Element Styles =========================
+   Fulcrum's visual voice is EDITORIAL + PRECISE. Not marketing-y.
+   Headlines are tight, lower-case-friendly sentence case, long and specific.
+   Body text is modest size, left-aligned, generous leading.
+=========================================================================== */
+
+html, body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.fl-display {
+  font-family: var(--font-sans);
+  font-size: var(--fs-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-strong);
+  text-wrap: balance;
+}
+
+.fl-numeral {
+  font-family: var(--font-sans);
+  font-size: var(--fs-numeral);
+  font-weight: var(--weight-light);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--fulcrum-navy);
+  font-feature-settings: "tnum" 1;
+}
+
+.fl-h1 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h1);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-strong);
+  text-wrap: balance;
+}
+
+.fl-h2 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-normal);
+  color: var(--fg-strong);
+}
+
+.fl-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h3);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-snug);
+  letter-spacing: 0;
+  color: var(--fg-strong);
+}
+
+.fl-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  text-wrap: pretty;
+}
+
+.fl-body-sm {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+}
+
+.fl-caption {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-normal);
+  color: var(--fg-muted);
+}
+
+.fl-meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-regular);
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+/* Small-caps editorial label — used for stream tags, kickers,
+   "PREPARED FOR", "CONFIDENTIAL", etc. */
+.fl-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--fulcrum-navy);
+}
+
+.fl-label--muted {
+  color: var(--fg-muted);
+}
+
+.fl-mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0;
+  color: var(--fg);
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+.fl-serif-kicker {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--weight-regular);
+  color: var(--fg-muted);
+  font-size: var(--fs-h3);
+  letter-spacing: 0;
+}
+
+/* Editorial rule — the brand's signature divider:
+   1px, full-width, navy; marks the start of a new thought. */
+.fl-rule {
+  border: 0;
+  border-top: 1px solid var(--fulcrum-navy);
+  margin: var(--space-6) 0;
+  height: 0;
+}
+.fl-rule--hair { border-top: 1px solid var(--border); }
+.fl-rule--thick { border-top: 2px solid var(--fulcrum-navy); }
+
+/* Tabular figures (always-on for numbers in tables and KPI tiles) */
+.fl-tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
