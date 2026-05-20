@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The GenAI Litmus Test | Intelligent Automation By Design</title>
+<meta name="description" content="Three uncomfortable questions every executive must ask their engineering team about their GenAI pilot. By Jeff Czischke, Intelligent Automation By Design.">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink-900);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: var(--fulcrum-navy); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ========== layout primitives ========== */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 56px; }
+  .wrap--narrow { max-width: 860px; margin: 0 auto; padding: 0 56px; }
+  .col-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; }
+  .stack > * + * { margin-top: var(--space-4); }
+
+  /* ========== top chrome ========== */
+  .topbar {
+    border-top: 4px solid var(--fulcrum-navy);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 30;
+    backdrop-filter: saturate(180%) blur(8px);
+    background: rgba(255,255,255,0.92);
+  }
+  .topbar__inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 56px;
+    max-width: 1180px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: baseline; gap: 16px; }
+  .brand__mark {
+    font-weight: 700; font-size: 12px; letter-spacing: 0.10em;
+    color: var(--fulcrum-navy);
+    white-space: nowrap;
+  }
+  .brand__byline {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 14px; color: var(--ink-500);
+  }
+  .brand__byline em { font-style: italic; color: var(--fulcrum-navy); font-weight: 500; }
+  .brand__byline::before {
+    content: "·"; margin: 0 12px; color: var(--ink-300); font-style: normal;
+  }
+  .topbar__meta {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--ink-500); letter-spacing: 0.04em;
+    display: flex; gap: 24px; align-items: center;
+    white-space: nowrap;
+  }
+  .topbar__meta a:hover { color: var(--fulcrum-navy); }
+
+  /* ========== HERO (inverted navy) ========== */
+  .hero {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0 80px;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: end;
+  }
+  .hero__kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 28px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .hero__kicker::after {
+    content: ""; height: 1px; width: 80px; background: rgba(255,255,255,0.25);
+  }
+  .hero__title {
+    font-size: 56px;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+    color: #fff;
+    text-wrap: balance;
+    margin: 0 0 32px;
+  }
+  .hero__title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+  }
+  .hero__lede {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.78);
+    max-width: 520px;
+    margin: 0 0 36px;
+    text-wrap: pretty;
+  }
+  .hero__meta {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 48px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    width: fit-content;
+  }
+  .hero__meta dt {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .hero__meta dd {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #fff;
+    margin: 0;
+  }
+  /* Right column: the three Q numerals */
+  .hero__qs {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.18);
+  }
+  .hero__q {
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+    align-items: baseline;
+  }
+  .hero__q-n {
+    font-size: 44px; font-weight: 300; line-height: 1;
+    color: #fff;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__q-text {
+    font-size: 15px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.82);
+    text-wrap: balance;
+  }
+  .hero__q-text strong { color: #fff; font-weight: 500; }
+
+  /* ========== KPI strip ========== */
+  .kpis {
+    background: var(--fulcrum-sand);
+    border-bottom: 1px solid var(--border);
+  }
+  .kpis__inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 40px 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .kpi {
+    padding: 0 32px;
+    border-right: 1px solid rgba(0,51,102,0.15);
+  }
+  .kpi:first-child { padding-left: 0; }
+  .kpi:last-child { border-right: 0; padding-right: 0; }
+  .kpi__n {
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--fulcrum-navy);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 12px;
+  }
+  .kpi__n .unit { font-size: 22px; font-weight: 400; margin-left: 2px; color: var(--ink-600); }
+  .kpi__label {
+    font-size: 12px;
+    color: var(--ink-700);
+    line-height: 1.4;
+    text-wrap: balance;
+    margin-bottom: 8px;
+  }
+  .kpi__src {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.04em;
+    color: var(--ink-500);
+    text-transform: uppercase;
+  }
+
+  /* ========== editorial body ========== */
+  section.essay { padding: 96px 0; }
+  section.essay--tight { padding: 64px 0 32px; }
+  .essay h2.section-title {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--fulcrum-navy);
+    margin: 0 0 28px;
+    text-wrap: balance;
+  }
+  .essay p, .essay li {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-800);
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+  .essay p strong { color: var(--ink-900); font-weight: 600; }
+  .essay p.lede {
+    font-size: 22px; line-height: 1.5;
+    color: var(--ink-700);
+    font-family: var(--font-serif);
+    font-style: italic;
+    text-wrap: balance;
+  }
+  .essay .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .pull {
+    border-left: 3px solid var(--fulcrum-navy);
+    padding: 4px 0 4px 28px;
+    margin: 36px 0;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--fulcrum-navy);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .pull cite {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    font-style: normal;
+    color: var(--ink-500);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  /* ========== QUESTION blocks ========== */
+  .question {
+    border-top: 1px solid var(--fulcrum-navy);
+    padding: 80px 0 64px;
+    position: relative;
+  }
+  .question__head {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 40px;
+  }
+  .question__n {
+    font-size: 120px;
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--fulcrum-navy);
+    letter-spacing: -0.05em;
+    font-variant-numeric: tabular-nums;
+    margin-top: -10px;
+  }
+  .question__h {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .question__kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .question__title {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.018em;
+    color: var(--ink-900);
+    text-wrap: balance;
+    margin: 0;
+  }
+  .question__body {
+    max-width: 720px;
+    margin-left: 232px;
+  }
+  .question__body p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-700);
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+  .question__body p strong { color: var(--ink-900); font-weight: 600; }
+
+  /* The interactive diagnostic card */
+  .diag {
+    margin: 36px 0 0 232px;
+    max-width: 720px;
+    background: var(--ink-50);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--fulcrum-navy);
+    padding: 28px 32px;
+  }
+  .diag__label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+  }
+  .diag__q {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--ink-900);
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+  .diag__actions {
+    display: flex; gap: 12px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .diag__btn {
+    appearance: none;
+    background: var(--paper);
+    border: 1px solid var(--border-strong);
+    color: var(--ink-800);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-standard);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .diag__btn:hover {
+    border-color: var(--fulcrum-navy);
+    color: var(--fulcrum-navy);
+    background: var(--paper);
+  }
+  .diag__btn:active { transform: translateY(1px); }
+  .diag__btn[aria-pressed="true"][data-val="yes"] {
+    background: var(--fulcrum-forest);
+    border-color: var(--fulcrum-forest);
+    color: #fff;
+  }
+  .diag__btn[aria-pressed="true"][data-val="no"] {
+    background: var(--fulcrum-navy);
+    border-color: var(--fulcrum-navy);
+    color: #fff;
+  }
+  .diag__hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    margin-left: auto;
+    letter-spacing: 0.02em;
+  }
+  .diag__feedback {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-700);
+    display: none;
+  }
+  .diag__feedback.is-shown { display: block; animation: fadeUp 240ms var(--ease-standard); }
+  .diag__feedback strong { color: var(--fulcrum-navy); font-weight: 600; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== SCORECARD (sticky summary) ========== */
+  .scorecard {
+    background: var(--fulcrum-navy);
+    color: #fff;
+    padding: 56px 0;
+    border-top: 1px solid var(--fulcrum-navy-deep);
+  }
+  .scorecard__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 240px 1fr auto;
+    gap: 48px;
+    align-items: center;
+  }
+  .scorecard__label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 12px;
+  }
+  .scorecard__n {
+    font-size: 64px; font-weight: 300; line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+  }
+  .scorecard__n small {
+    font-size: 24px; color: rgba(255,255,255,0.5);
+    font-weight: 400; margin-left: 4px;
+  }
+  .scorecard__verdict {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.3;
+    color: #fff;
+    text-wrap: balance;
+    transition: opacity 200ms;
+  }
+  .scorecard__verdict .takeaway {
+    display: block;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .scorecard__action {
+    display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+  }
+  .scorecard__cta {
+    background: #fff;
+    color: var(--fulcrum-navy);
+    border: 1px solid #fff;
+    padding: 14px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-standard);
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .scorecard__cta:hover { background: var(--fulcrum-sand); }
+  .scorecard__cta:active { transform: translateY(1px); }
+  .scorecard__reset {
+    background: transparent;
+    border: 0;
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .scorecard__reset:hover { color: #fff; }
+
+  /* ========== SECTION OPENER (six steps) ========== */
+  .opener {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    padding: 80px 0 64px;
+  }
+  .opener__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: end;
+  }
+  .opener__kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 24px;
+  }
+  .opener__title {
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: #fff;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .opener__title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(255,255,255,0.78);
+  }
+  .opener__lede {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.78);
+    text-wrap: pretty;
+    margin: 0;
+  }
+
+  /* ========== STEPS table ========== */
+  .steps {
+    padding: 80px 0;
+    background: var(--paper);
+  }
+  .steps__list {
+    list-style: none;
+    margin: 0; padding: 0;
+    counter-reset: step;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 72px 1.4fr 2fr;
+    gap: 40px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .step:first-child { padding-top: 0; }
+  .step:last-child { border-bottom: 0; }
+  .step__n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fulcrum-navy);
+    letter-spacing: 0.04em;
+    padding-top: 6px;
+  }
+  .step__title {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.012em;
+    color: var(--ink-900);
+    text-wrap: balance;
+    margin: 0;
+  }
+  .step__title small {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--ink-500);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  .step__body p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    margin: 0 0 12px;
+  }
+  .step__body p:last-child { margin-bottom: 0; }
+  .step__body strong { color: var(--ink-900); font-weight: 600; }
+  .step__tier {
+    display: inline-block;
+    margin-right: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    background: var(--ink-100);
+    color: var(--fulcrum-navy);
+    border-radius: var(--radius-xs);
+  }
+
+  /* ========== BOTTOM LINE ========== */
+  .bottom {
+    background: var(--fulcrum-sand);
+    padding: 96px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .bottom__inner {
+    max-width: 860px; margin: 0 auto;
+    padding: 0 56px;
+  }
+  .bottom__label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 24px;
+  }
+  .bottom__title {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.18;
+    letter-spacing: -0.018em;
+    color: var(--fulcrum-navy);
+    text-wrap: balance;
+    margin: 0 0 24px;
+  }
+  .bottom__body p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-800);
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+  .bottom__body strong { color: var(--ink-900); font-weight: 600; }
+
+  /* ========== CTA panel ========== */
+  .cta {
+    padding: 88px 0;
+    background: var(--paper);
+  }
+  .cta__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .cta__card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: var(--radius-md);
+  }
+  .cta__card--primary {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    border: 1px solid var(--fulcrum-navy-deep);
+  }
+  .cta__label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 18px;
+  }
+  .cta__card--primary .cta__label { color: rgba(255,255,255,0.55); }
+  .cta__title {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    color: var(--ink-900);
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .cta__card--primary .cta__title { color: #fff; }
+  .cta__body {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-700);
+    margin: 0 0 28px;
+    text-wrap: pretty;
+  }
+  .cta__card--primary .cta__body { color: rgba(255,255,255,0.78); }
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    background: var(--fulcrum-navy);
+    color: #fff;
+    border: 1px solid var(--fulcrum-navy);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-standard);
+  }
+  .cta__btn:hover {
+    background: var(--fulcrum-navy-deep);
+    border-color: var(--fulcrum-navy-deep);
+  }
+  .cta__btn:active { transform: translateY(1px); }
+  .cta__card--primary .cta__btn {
+    background: #fff; color: var(--fulcrum-navy); border-color: #fff;
+  }
+  .cta__card--primary .cta__btn:hover { background: var(--fulcrum-sand); }
+  .cta__btn .arrow { width: 14px; height: 14px; }
+
+  .cta__secondary {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center; gap: 6px;
+    font-size: 12px;
+    color: var(--ink-500);
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  .cta__card--primary .cta__secondary { color: rgba(255,255,255,0.5); }
+  .cta__secondary a { color: var(--fulcrum-navy); border-bottom: 1px solid var(--border-strong); }
+  .cta__card--primary .cta__secondary a { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+  /* ========== AUTHOR ========== */
+  .author {
+    padding: 64px 0 80px;
+    border-top: 1px solid var(--border);
+  }
+  .author__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .author__portrait {
+    width: 180px; height: 220px;
+    background: var(--ink-100);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .author__portrait::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(135deg, var(--fulcrum-navy-soft) 0%, var(--fulcrum-navy) 50%, var(--fulcrum-navy-deep) 100%);
+    opacity: 0.92;
+  }
+  .author__initials {
+    position: relative; z-index: 1;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 80px;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: -0.04em;
+  }
+  .author__name {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin: 0 0 6px;
+    letter-spacing: -0.012em;
+  }
+  .author__role {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-500);
+    margin: 0 0 22px;
+  }
+  .author__bio {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    margin: 0 0 24px;
+    max-width: 680px;
+    text-wrap: pretty;
+  }
+  .author__bio em { font-family: var(--font-serif); font-style: italic; color: var(--fulcrum-navy); font-weight: 500; }
+  .author__links {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .author__link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    color: var(--fulcrum-navy);
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-standard);
+  }
+  .author__link:hover {
+    border-color: var(--fulcrum-navy);
+    background: var(--ink-50);
+  }
+
+  /* ========== FOOTER ========== */
+  footer.foot {
+    background: var(--fulcrum-navy-deep);
+    color: rgba(255,255,255,0.6);
+    padding: 48px 0 64px;
+  }
+  .foot__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  .foot__top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    margin-bottom: 28px;
+  }
+  .foot__brand {
+    font-weight: 700; font-size: 13px; letter-spacing: 0.14em;
+    color: #fff;
+  }
+  .foot__nav {
+    display: flex; gap: 32px; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.04em;
+  }
+  .foot__nav a { color: rgba(255,255,255,0.7); }
+  .foot__nav a:hover { color: #fff; }
+  .foot__meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+  }
+  .foot__meta .sep { margin: 0 12px; color: rgba(255,255,255,0.3); }
+
+  /* ========== TWEAKS PANEL ========== */
+  .tweaks {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 280px;
+    background: var(--paper);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-3);
+    z-index: 200;
+    display: none;
+    overflow: hidden;
+  }
+  .tweaks.is-open { display: block; }
+  .tweaks__head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--ink-50);
+  }
+  .tweaks__title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+  }
+  .tweaks__close {
+    background: transparent; border: 0; color: var(--ink-500);
+    font-size: 18px; cursor: pointer; line-height: 1;
+    padding: 0; width: 20px; height: 20px;
+  }
+  .tweaks__body {
+    padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .tweak-row label {
+    display: block;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 8px;
+  }
+  .tweak-seg {
+    display: grid;
+    grid-template-columns: repeat(var(--cols,2), 1fr);
+    gap: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .tweak-seg button {
+    appearance: none;
+    background: var(--paper);
+    border: 0;
+    border-right: 1px solid var(--border);
+    padding: 8px 10px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-700);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-standard);
+  }
+  .tweak-seg button:last-child { border-right: 0; }
+  .tweak-seg button[aria-pressed="true"] {
+    background: var(--fulcrum-navy);
+    color: #fff;
+  }
+  .tweak-seg button:hover:not([aria-pressed="true"]) {
+    background: var(--ink-50);
+    color: var(--fulcrum-navy);
+  }
+  .tweaks__hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-500);
+    letter-spacing: 0.02em;
+    padding-top: 4px;
+  }
+
+  /* ========== HERO white variant ========== */
+  body[data-hero="white"] .hero {
+    background: var(--paper);
+    color: var(--ink-900);
+    border-bottom: 1px solid var(--fulcrum-navy);
+  }
+  body[data-hero="white"] .hero__kicker { color: var(--fulcrum-navy); }
+  body[data-hero="white"] .hero__kicker::after { background: var(--fulcrum-navy); opacity: 0.3; }
+  body[data-hero="white"] .hero__title { color: var(--ink-900); }
+  body[data-hero="white"] .hero__title em { color: var(--fulcrum-navy); }
+  body[data-hero="white"] .hero__lede { color: var(--ink-600); }
+  body[data-hero="white"] .hero__meta { border-top-color: var(--border); }
+  body[data-hero="white"] .hero__meta dt { color: var(--ink-500); }
+  body[data-hero="white"] .hero__meta dd { color: var(--ink-900); }
+  body[data-hero="white"] .hero__qs,
+  body[data-hero="white"] .hero__q { border-color: var(--border); }
+  body[data-hero="white"] .hero__q-n { color: var(--fulcrum-navy); }
+  body[data-hero="white"] .hero__q-text { color: var(--ink-700); }
+  body[data-hero="white"] .hero__q-text strong { color: var(--ink-900); }
+
+  /* ========== Scorecard hidden ========== */
+  body[data-scorecard="off"] .scorecard { display: none; }
+  body[data-scorecard="off"] .diag__btn[data-val] { /* keep buttons but no aggregate */ }
+
+  /* CTA variants: handled by JS swapping text + href */
+
+  /* ========== responsive ==========
+     Two-column layouts stack at <1100px; display headlines need
+     ≥520px per column to read editorially rather than as one word
+     per line. Below 720px we collapse padding and tighten type. */
+
+  /* --- stack 2-col layouts (hero, opener, scorecard, cta) at laptop widths --- */
+  @media (max-width: 1100px) {
+    .hero { padding: 72px 0 56px; }
+    .hero__grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero__title { font-size: 48px; }
+    .hero__qs { max-width: 720px; }
+    .opener__inner { grid-template-columns: 1fr; gap: 28px; }
+    .opener__title { font-size: 36px; }
+    .scorecard__inner { grid-template-columns: 1fr; gap: 24px; }
+    .scorecard__action { align-items: flex-start; flex-direction: row; gap: 20px; align-items: center; }
+    .cta__inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* --- tablet & narrower: collapse paddings, single column tables --- */
+  @media (max-width: 760px) {
+    .wrap, .wrap--narrow { padding: 0 24px; }
+    .topbar__inner { padding: 14px 24px; flex-wrap: wrap; gap: 8px 16px; }
+    .topbar__meta { font-size: 10px; gap: 14px; }
+    .brand { flex-wrap: wrap; gap: 6px 12px; }
+    .brand__byline::before { display: none; }
+    .hero { padding: 56px 0 40px; }
+    .hero__title { font-size: 34px; }
+    .hero__lede { font-size: 18px; }
+    .hero__meta { grid-template-columns: 1fr; gap: 18px; }
+    .kpis__inner { grid-template-columns: repeat(2, 1fr); gap: 24px 0; padding: 32px 24px; }
+    .kpi { border-right: 0; padding: 0 16px; border-bottom: 1px solid rgba(0,51,102,0.15); padding-bottom: 24px; }
+    .kpi:nth-child(odd) { padding-left: 0; }
+    .kpi:nth-child(even) { padding-right: 0; }
+    .kpi:nth-last-child(-n+2) { border-bottom: 0; padding-bottom: 0; }
+    .kpi__n { font-size: 34px; }
+    section.essay { padding: 64px 0; }
+    .essay p.lede { font-size: 19px; }
+    .question { padding: 56px 0 48px; }
+    .question__head { grid-template-columns: 1fr; gap: 14px; margin-bottom: 28px; }
+    .question__n { font-size: 64px; line-height: 1; margin-top: 0; }
+    .question__title { font-size: 24px; }
+    .question__body, .diag { margin-left: 0; max-width: none; }
+    .pull { font-size: 19px; padding-left: 20px; margin: 28px 0; }
+    .scorecard { padding: 40px 0; }
+    .scorecard__inner { padding: 0 24px; }
+    .scorecard__action { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .scorecard__verdict { font-size: 21px; }
+    .scorecard__n { font-size: 52px; }
+    .opener { padding: 56px 0 48px; }
+    .opener__inner { padding: 0 24px; }
+    .opener__title { font-size: 30px; }
+    .opener__lede { font-size: 17px; }
+    .steps { padding: 56px 0; }
+    .step { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; }
+    .step__title { font-size: 19px; }
+    .bottom { padding: 64px 0; }
+    .bottom__inner { padding: 0 24px; }
+    .bottom__title { font-size: 26px; }
+    .bottom__body p { font-size: 16px; }
+    .cta { padding: 64px 0; }
+    .cta__inner { padding: 0 24px; }
+    .cta__card { padding: 28px; }
+    .cta__title { font-size: 22px; }
+    .author { padding: 48px 0 64px; }
+    .author__inner { grid-template-columns: 1fr; gap: 24px; padding: 0 24px; }
+    .author__portrait { width: 120px; height: 150px; }
+    .author__initials { font-size: 56px; }
+    .foot__inner { padding: 0 24px; }
+    .foot__top { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .foot__nav { gap: 20px; flex-wrap: wrap; }
+    .tweaks { right: 12px; bottom: 12px; width: 240px; }
+  }
+</style>
+</head>
+<body data-hero="navy" data-cta="book" data-scorecard="on">
+
+<!-- ============ TOP CHROME ============ -->
+<header class="topbar" data-screen-label="00 Topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark">INTELLIGENT AUTOMATION BY DESIGN</span>
+      <span class="brand__byline">A publication of the <em>ThankYouAI</em> newsletter</span>
+    </div>
+    <div class="topbar__meta">
+      <span>7 min read</span>
+      <span>·</span>
+      <a href="#cta">Book a diagnostic →</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="01 Hero">
+  <div class="wrap">
+    <div class="hero__grid">
+      <div>
+        <div class="hero__kicker">The GenAI Litmus Test</div>
+        <h1 class="hero__title">Three uncomfortable questions every executive must ask their engineering team <em>right now</em>.</h1>
+        <p class="hero__lede">The single most common mistake in enterprise AI isn't the wrong model or under-investment. It's moving too fast with a system that looks healthy on demo day, and is a compliance time bomb in production.</p>
+        <dl class="hero__meta">
+          <div>
+            <dt>Author</dt>
+            <dd>Jeff Czischke</dd>
+          </div>
+          <div>
+            <dt>Publication</dt>
+            <dd>The ThankYouAI Newsletter</dd>
+          </div>
+          <div>
+            <dt>Published</dt>
+            <dd>May 2026</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="hero__qs" aria-label="Preview of the three questions">
+        <div class="hero__q">
+          <span class="hero__q-n">01</span>
+          <span class="hero__q-text">If your AI makes an error, can you trace the <strong>exact mathematical path</strong> it took to get there?</span>
+        </div>
+        <div class="hero__q">
+          <span class="hero__q-n">02</span>
+          <span class="hero__q-text">Are you spending more time writing prompt guardrails than <strong>building actual features?</strong></span>
+        </div>
+        <div class="hero__q">
+          <span class="hero__q-n">03</span>
+          <span class="hero__q-text">What happens to your liability if the AI gives a <strong>"less wrong" but still legally actionable</strong> answer?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KPI STRIP ============ -->
+<section class="kpis" data-screen-label="02 By the numbers" aria-label="By the numbers">
+  <div class="kpis__inner">
+    <div class="kpi">
+      <div class="kpi__n">40<span class="unit">%+</span></div>
+      <div class="kpi__label">of agentic AI projects projected to be cancelled by end of 2027.</div>
+      <div class="kpi__src">Source · Gartner</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi__n">74<span class="unit">%</span></div>
+      <div class="kpi__label">of organizations expect AI agents moderately deployed by 2027.</div>
+      <div class="kpi__src">Source · Deloitte</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi__n">21<span class="unit">%</span></div>
+      <div class="kpi__label">have mature governance for those agents in place today.</div>
+      <div class="kpi__src">Source · Deloitte</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi__n">70<span class="unit">%</span></div>
+      <div class="kpi__label">of AI value comes from people &amp; process redesign, not the algorithm.</div>
+      <div class="kpi__src">Source · BCG · 10-20-70 rule</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="essay essay--tight" data-screen-label="03 Intro">
+  <div class="wrap--narrow">
+    <span class="label">The Guardrail Gap</span>
+    <p class="lede">I see it after advising enterprise AI programs across financial services, healthcare, life sciences, and manufacturing: the gap between <em>"we have AI in production"</em> and <em>"we have governable AI in production"</em> is where careers go to die.</p>
+    <p>The questions below are a three-question diagnostic I use with clients. You don't need a consultant to run them. You need twenty minutes and the intellectual honesty to sit with the answers.</p>
+    <p>Each question carries a yes/no self-check. Mark your honest answers. Your running score appears at the bottom.</p>
+  </div>
+</section>
+
+<!-- ============ QUESTION 01 ============ -->
+<article class="question" id="q1" data-screen-label="04 Question 01">
+  <div class="wrap">
+    <div class="question__head">
+      <div class="question__n">01</div>
+      <div class="question__h">
+        <span class="question__kicker">Explainability &amp; Audit</span>
+        <h2 class="question__title">If your AI makes an error, can you trace the exact mathematical path it took to get there?</h2>
+      </div>
+    </div>
+
+    <div class="question__body">
+      <p>Read that again. Not <em>"can you see the output."</em> Not <em>"can you run it again and see if it happens twice."</em> Can you trace the <strong>exact mathematical path</strong> the model took to produce a specific, wrong answer?</p>
+      <p>For a standard LLM, RAG-based or otherwise, the honest answer is <strong>no</strong>. This isn't a criticism of the technology; it's a structural reality of how transformer models work. Billions of weight multiplications across layers do not preserve a human-readable reasoning chain.</p>
+      <p>Why it matters beyond the technical: the EU AI Act mandates transparency and traceability for high-risk systems. GDPR Article 22 grants individuals the right to <strong>meaningful information</strong> about automated decisions. The ACC's 2025 AI Governance Toolkit lists explainability as one of only 13 core principles. <strong>"The model is a black box"</strong> is not a defensible answer to a board, a regulator, or a court.</p>
+    </div>
+
+    <div class="diag" data-q="q1">
+      <div class="diag__label">Diagnostic: Answer honestly</div>
+      <p class="diag__q">For every AI-generated output that affects a customer, employee, or business decision, do you have a documented audit trail of what was retrieved, how it was ranked, what the model was instructed to do, and what guardrails were triggered?</p>
+      <div class="diag__actions">
+        <button class="diag__btn" data-val="yes" aria-pressed="false">✓ Yes, we have this</button>
+        <button class="diag__btn" data-val="no" aria-pressed="false">× No, we don't</button>
+        <span class="diag__hint">Q1 of 3</span>
+      </div>
+      <div class="diag__feedback">
+        <span data-feedback="yes" hidden><strong>Good.</strong> You're in the minority. Skip ahead to Step 3. Runtime observability is your floor, not your ceiling.</span>
+        <span data-feedback="no" hidden><strong>You're running a science experiment.</strong> A compliance-ready production system requires a per-request trace layer. Step 3 below is the concrete fix.</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ QUESTION 02 ============ -->
+<article class="question" id="q2" data-screen-label="05 Question 02">
+  <div class="wrap">
+    <div class="question__head">
+      <div class="question__n">02</div>
+      <div class="question__h">
+        <span class="question__kicker">Architecture vs. duct tape</span>
+        <h2 class="question__title">Are you spending more time writing prompt guardrails than building actual features?</h2>
+      </div>
+    </div>
+
+    <div class="question__body">
+      <p>There's a moment in every RAG/LLM project where the team quietly starts losing the battle against the model's own creativity. A customer-facing AI gives an off-brand answer, so you add a guardrail. It hallucinates a spec, so you add another. It gives a technically accurate but legally problematic interpretation, and now there's a Slack thread with Legal.</p>
+      <p>Three sprints later, engineers spend 60% of their time writing prompt instructions about what the model should <em>not</em> do, and you've shifted from AI product development to <strong>AI behavior management</strong>.</p>
+      <p>This isn't a failure of intelligence. It's a signal about architectural fit. Prompt engineering is not a governance strategy. It's duct tape. The teams that have scaled past pilots didn't get there by writing better prompts. They got there by building architecture that <strong>enforces constraints at runtime</strong>.</p>
+
+      <div class="pull">"Policy can no longer be a slow governance artifact reviewed in committees. It must become part of the runtime operating model, enforcing constraints at the moment an agent is about to act, not after the fact."
+        <cite>Charles Skamser · PX42 enterprise architecture</cite>
+      </div>
+    </div>
+
+    <div class="diag" data-q="q2">
+      <div class="diag__label">Diagnostic: Answer honestly</div>
+      <p class="diag__q">Show the ratio of engineering time spent on guardrail management versus net-new feature capability in the last two sprints. Is the feature line growing faster than the guardrail line?</p>
+      <div class="diag__actions">
+        <button class="diag__btn" data-val="yes" aria-pressed="false">✓ Yes, features outpacing guardrails</button>
+        <button class="diag__btn" data-val="no" aria-pressed="false">× No, guardrails are eating us</button>
+        <span class="diag__hint">Q2 of 3</span>
+      </div>
+      <div class="diag__feedback">
+        <span data-feedback="yes" hidden><strong>Healthy sign.</strong> Verify the durability of your constraints. Step 4 has the four-layer architecture pattern that holds up in production.</span>
+        <span data-feedback="no" hidden><strong>You're building a containment strategy, not a product.</strong> Step 4 below is the architectural fix: input validation, retrieval-layer ACLs, output evaluators, workflow approval gates.</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ QUESTION 03 ============ -->
+<article class="question" id="q3" data-screen-label="06 Question 03">
+  <div class="wrap">
+    <div class="question__head">
+      <div class="question__n">03</div>
+      <div class="question__h">
+        <span class="question__kicker">Liability &amp; the 92% problem</span>
+        <h2 class="question__title">What happens to your liability if the AI gives a "less wrong" but still legally actionable answer?</h2>
+      </div>
+    </div>
+
+    <div class="question__body">
+      <p>This is the question that makes rooms go quiet. Not <em>"what if the AI is catastrophically wrong."</em> Everyone has thought about that. I'm asking about the more dangerous case: <strong>what happens when the AI is 92% right.</strong></p>
+      <p>Your chatbot answers a coverage question. It correctly names the policy type, the limits, the exclusion period, and misses one jurisdiction-specific carve-out a licensed agent would have flagged. The customer acts on the answer. A claim is denied.</p>
+      <p><strong>Who owns that?</strong> The model doesn't have a law license. The vendor's terms point indemnification back at you. And if you deployed the system without adequate human-in-the-loop checkpoints (checkpoints you replaced with a system prompt telling it to "always refer customers to their policy documents"), you have a paper trail showing you knew the system had limitations and deployed it anyway.</p>
+      <p>This isn't hypothetical. The ACC AI Toolkit is explicit: lawyers remain personally responsible for AI-generated legal work under their duty of competence. The same accountability logic is being extended across financial services, healthcare, and insurance. Deploy AI into customer-facing workflows without redesigning the accountability model and you don't reduce liability; <strong>you diffuse it</strong>. Diffused accountability is worse: no one gets the early warning signal when the system drifts. And drift is not if, it's when.</p>
+    </div>
+
+    <div class="diag" data-q="q3">
+      <div class="diag__label">Diagnostic: Answer honestly</div>
+      <p class="diag__q">Can you produce, today, a written accountability map for every workflow where AI output reaches a customer without mandatory human review, naming who is legally accountable if that output triggers a complaint, inquiry, or litigation?</p>
+      <div class="diag__actions">
+        <button class="diag__btn" data-val="yes" aria-pressed="false">✓ Yes, it exists in writing</button>
+        <button class="diag__btn" data-val="no" aria-pressed="false">× No, it's an aspiration</button>
+        <span class="diag__hint">Q3 of 3</span>
+      </div>
+      <div class="diag__feedback">
+        <span data-feedback="yes" hidden><strong>You have a governance program.</strong> Most enterprises have a governance <em>aspiration</em>. Step 5 below shows how to keep that map current per deployment.</span>
+        <span data-feedback="no" hidden><strong>You have a governance aspiration, not a program.</strong> Step 5 below, the five-field accountability document required before every deployment, is the concrete fix.</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ SCORECARD ============ -->
+<aside class="scorecard" id="scorecard" data-screen-label="07 Scorecard" aria-live="polite">
+  <div class="scorecard__inner">
+    <div>
+      <div class="scorecard__label">Your Guardrail Gap</div>
+      <div class="scorecard__n"><span id="scoreNum">·</span><small>/&nbsp;3</small></div>
+    </div>
+    <div>
+      <div class="scorecard__verdict" id="scoreVerdict">
+        Answer the three diagnostics above to see your score.
+        <span class="takeaway">The verdict updates live as you answer.</span>
+      </div>
+    </div>
+    <div class="scorecard__action">
+      <a href="#cta" class="scorecard__cta" id="scoreCta">
+        Book a pro bono diagnostic
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </a>
+      <button class="scorecard__reset" id="scoreReset" type="button">Reset answers</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ SECTION OPENER ============ -->
+<section class="opener" data-screen-label="08 Fix opener">
+  <div class="opener__inner">
+    <div>
+      <div class="opener__kicker">So what does fixing this look like?</div>
+      <h2 class="opener__title">Six concrete steps. <em>Sequenced.</em></h2>
+    </div>
+    <p class="opener__lede">Most thought-leadership pieces stop at the diagnosis. The next six steps are what I've actually seen work when a mature AI Center of Excellence (or a well-led IT organization) takes this seriously.</p>
+  </div>
+</section>
+
+<!-- ============ STEPS ============ -->
+<section class="steps" data-screen-label="09 Six steps">
+  <div class="wrap">
+    <ol class="steps__list">
+      <li class="step">
+        <div class="step__n">STEP 01</div>
+        <div>
+          <h3 class="step__title">Stand up a dedicated AI governance function.<small>Before you scale anything.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>Technology teams optimize to ship. Governance requires someone whose job is to say no, slow things down at the right moments, and maintain a living inventory of every AI system in production.</p>
+          <p>IBM's research: organizations with a Chief AI Officer see <strong>10% greater ROI</strong>; centralized or hub-and-spoke operating models produce <strong>36% higher ROI</strong> than decentralized. You don't need a headcount of 30. You need one empowered person with a cross-functional mandate and a seat at the table.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step__n">STEP 02</div>
+        <div>
+          <h3 class="step__title">Build an AI system inventory before regulators ask for one.<small>The most important early deliverable.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>Sounds like busywork. It's the foundation. Capture, for every AI system: what it does, which data it touches, which decisions it influences, what the human oversight mechanism is, and which regulatory frameworks apply.</p>
+          <p>Shadow AI is endemic: more than half of employees say they would use AI without employer authorization. A maintained spreadsheet with a defined review cadence beats a sophisticated platform no one updates.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step__n">STEP 03</div>
+        <div>
+          <h3 class="step__title">Implement runtime observability, not just output logging.<small>The fix for Question 01.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>Capture the full decision trace: what was retrieved, the retrieval scores, what the model was instructed to do, what it actually did. The enterprise standard is a three-tier model:</p>
+          <p><span class="step__tier">Tier 1</span>Business metrics: goal completion, task success, revenue or cost impact. Your board-facing layer.</p>
+          <p><span class="step__tier">Tier 2</span>Application telemetry: latency, error rates, token consumption, human feedback signals. Daily ops layer.</p>
+          <p><span class="step__tier">Tier 3</span>Trace-level debugging: full OpenTelemetry spans for every action, tool call, intermediate step. On-demand. This is how you answer the auditor's question.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step__n">STEP 04</div>
+        <div>
+          <h3 class="step__title">Replace prompt guardrails with architectural controls.<small>The fix for Question 02.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>Prompt-level guardrails are fragile because they are instructions, not enforcement. A creative user input or a vendor model update can bypass them silently. Move controls into the architecture:</p>
+          <p><strong>Input layer.</strong> A validation agent classifies the request before it reaches the main model: rejects out-of-scope, flags high-risk types for review, logs the decision.</p>
+          <p><strong>Retrieval layer.</strong> Source-level access controls. Enforced by infrastructure, not a prompt instruction.</p>
+          <p><strong>Output layer.</strong> An evaluator agent checks generated responses against a defined policy set before they return to the user. Logged, tested, updated independently.</p>
+          <p><strong>Workflow layer.</strong> Define which actions require human approval before execution. Human-in-the-loop is a feature, not a weakness.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step__n">STEP 05</div>
+        <div>
+          <h3 class="step__title">Define the accountability map in writing before each deployment.<small>The fix for Question 03.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>Before any AI system touching customers or regulated workflows ships, require a completed accountability document covering five fields:</p>
+          <p><strong>1. Decision boundary:</strong> what is this system authorized to decide, and what is explicitly out of scope?<br>
+          <strong>2. Error impact classification:</strong> worst-case downstream impact if it's wrong; who it affects; how.<br>
+          <strong>3. Human review requirements:</strong> which output categories require human review before reaching the end user.<br>
+          <strong>4. Accountability assignment:</strong> who, by name and role, is accountable for outputs in each error category.<br>
+          <strong>5. Incident response path:</strong> if a compliance issue is triggered, who is notified, in what order, within what timeframe.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step__n">STEP 06</div>
+        <div>
+          <h3 class="step__title">Treat evaluation as a continuous practice, not a pre-launch checklist.<small>Models drift. Quietly.</small></h3>
+        </div>
+        <div class="step__body">
+          <p>The most common governance failure isn't the absence of guardrails at launch. It's the absence of any process to detect when they stop working. A system that was 91% accurate at launch can be 78% accurate six months later, and no one will know unless continuous evaluation was built in from day one.</p>
+          <p>Define evaluation metrics before launch. Run automated evaluation on every model revision. Set quality thresholds that trigger a human review process if crossed. Schedule quarterly human evaluation to calibrate whether your automated criteria still reflect what the business values.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ BOTTOM LINE ============ -->
+<section class="bottom" data-screen-label="10 Bottom line">
+  <div class="bottom__inner">
+    <div class="bottom__label">The bottom line</div>
+    <h2 class="bottom__title">The Litmus Test is not meant to stop your AI program. It's meant to surface the gaps that will stop it for you, at the worst possible moment.</h2>
+    <div class="bottom__body">
+      <p>When a regulator, a plaintiff's attorney, or your own board comes asking. The organizations scaling AI successfully (and BCG data shows they're outperforming peers by <strong>2.6× on revenue growth and 38% on EBIT</strong>) are not moving recklessly and they are not moving cautiously.</p>
+      <p>They are moving with <strong>structured confidence</strong>: clear accountability, observable systems, runtime controls, and a governance function empowered to set the pace. That is the standard. The Litmus Test tells you how far you are from it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="cta" data-screen-label="11 CTA">
+  <div class="cta__inner">
+    <div class="cta__card cta__card--primary">
+      <div class="cta__label">Next step · No charge</div>
+      <h3 class="cta__title" id="ctaTitle">A 45-minute pro bono diagnostic with Jeff.</h3>
+      <p class="cta__body" id="ctaBody">Walk through the three questions against your live program. Walk away with a one-page risk map and the two highest-leverage next moves. No sales pitch, no follow-up sequence. You choose what to do with it.</p>
+      <a href="mailto:jeff.czischke@fulcrumlabsinc.com?subject=GenAI%20Litmus%20Test%20%E2%80%94%20Schedule%20a%20diagnostic" class="cta__btn" id="ctaBtn" data-screen-label="CTA Primary">
+        <span id="ctaBtnLabel">Schedule the session</span>
+        <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </a>
+      <div class="cta__secondary" id="ctaSecondary"></div>
+    </div>
+
+    <div class="cta__card">
+      <div class="cta__label">Drop your honest answer to Q1</div>
+      <h3 class="cta__title">The patterns across industries are more revealing than any benchmark report.</h3>
+      <p class="cta__body">I read every response. If you'd rather share publicly, drop it as a comment on the LinkedIn article. The conversation there is where most of the learning happens.</p>
+      <a href="https://www.linkedin.com/article/edit/7462654934765780992/" target="_blank" rel="noopener" class="cta__btn" style="background:#fff;color:var(--fulcrum-navy);border-color:var(--border-strong);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+        Discuss on LinkedIn
+      </a>
+      <div class="cta__secondary">
+        <a href="https://www.linkedin.com/article/edit/7462654934765780992/" target="_blank" rel="noopener">View the original article →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTHOR ============ -->
+<section class="author" data-screen-label="12 Author">
+  <div class="author__inner">
+    <div class="author__portrait" aria-hidden="true">
+      <span class="author__initials">JC</span>
+    </div>
+    <div>
+      <h3 class="author__name">Jeff Czischke</h3>
+      <p class="author__role">Founder · Intelligent Automation By Design · Enterprise AI &amp; Automation</p>
+      <p class="author__bio">Jeff has built and scaled enterprise AI programs from the ground up, including a federated AI Center of Excellence serving 14 business units. He advises leaders on AI governance, agentic systems, and responsible AI at scale. Intelligent Automation By Design is a boutique consultancy that builds production-grade agentic systems for Finance, Operations, and HR inside large organizations: 70 days from discovery to first production automation, same team start to finish. This essay was first published in <em>The ThankYouAI Newsletter</em>.</p>
+      <div class="author__links">
+        <a class="author__link" href="https://www.linkedin.com/article/edit/7462654934765780992/" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn</a>
+        <a class="author__link" href="mailto:jeff.czischke@fulcrumlabsinc.com">jeff.czischke@fulcrumlabsinc.com</a>
+        <a class="author__link" href="https://intelligentautomationbydesign.com">intelligentautomationbydesign.com →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot" data-screen-label="13 Footer">
+  <div class="foot__inner">
+    <div class="foot__top">
+      <div class="foot__brand">INTELLIGENT AUTOMATION BY DESIGN</div>
+      <nav class="foot__nav">
+        <a href="#q1">The 3 questions</a>
+        <a href="#scorecard">Score</a>
+        <a href="#cta">Book a session</a>
+        <a href="https://www.linkedin.com/article/edit/7462654934765780992/" target="_blank" rel="noopener">Subscribe to ThankYouAI →</a>
+      </nav>
+    </div>
+    <div class="foot__meta">
+      © 2026 Intelligent Automation By Design<span class="sep">·</span>A publication of the ThankYouAI newsletter<span class="sep">·</span>Confidential to recipient
+    </div>
+  </div>
+</footer>
+
+<!-- ============ TWEAKS PANEL ============ -->
+<aside class="tweaks" id="tweaks" aria-label="Tweaks">
+  <div class="tweaks__head">
+    <span class="tweaks__title">Tweaks</span>
+    <button class="tweaks__close" id="tweaksClose" aria-label="Close">×</button>
+  </div>
+  <div class="tweaks__body">
+    <div class="tweak-row">
+      <label>Hero treatment</label>
+      <div class="tweak-seg" style="--cols:2;" data-tweak="hero">
+        <button data-val="navy" aria-pressed="true">Navy inverted</button>
+        <button data-val="white" aria-pressed="false">White editorial</button>
+      </div>
+    </div>
+    <div class="tweak-row">
+      <label>Primary CTA</label>
+      <div class="tweak-seg" style="--cols:3;" data-tweak="cta">
+        <button data-val="book" aria-pressed="true">Book</button>
+        <button data-val="email" aria-pressed="false">Email</button>
+        <button data-val="download" aria-pressed="false">Download</button>
+      </div>
+    </div>
+    <div class="tweak-row">
+      <label>Live scorecard</label>
+      <div class="tweak-seg" style="--cols:2;" data-tweak="scorecard">
+        <button data-val="on" aria-pressed="true">On</button>
+        <button data-val="off" aria-pressed="false">Off</button>
+      </div>
+    </div>
+    <div class="tweaks__hint">Changes persist on this device.</div>
+  </div>
+</aside>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// ============ TWEAK DEFAULTS ============
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "hero": "navy",
+  "cta": "book",
+  "scorecard": "on"
+}/*EDITMODE-END*/;
+
+const CTA_CONTENT = {
+  book: {
+    title: "A 45-minute pro bono diagnostic with Jeff.",
+    body: "Walk through the three questions against your live program. Walk away with a one-page risk map and the two highest-leverage next moves. No sales pitch, no follow-up sequence. You choose what to do with it.",
+    btn: "Schedule the session",
+    href: "mailto:jeff.czischke@fulcrumlabsinc.com?subject=GenAI%20Litmus%20Test%20%E2%80%94%20Schedule%20a%20diagnostic",
+    secondary: ''
+  },
+  email: {
+    title: "Send Jeff your most honest answer.",
+    body: "Reply directly to Jeff with your answer to Question 1, even a one-line response. He reads every email and patterns the responses across industries.",
+    btn: "Email Jeff directly",
+    href: "mailto:jeff.czischke@fulcrumlabsinc.com?subject=Litmus%20Test%20-%20My%20answer%20to%20Q1",
+    secondary: 'Or <a href="https://calendly.com/intelligentautomationbydesign/litmus">book a 45-min session →</a>'
+  },
+  download: {
+    title: "The full Litmus Test, as a one-page brief.",
+    body: "Get the printable PDF version: the three questions, the six-step fix, and a fill-in accountability map you can take into your next AI steering committee meeting.",
+    btn: "Download the PDF",
+    href: "#",
+    secondary: 'Or <a href="https://calendly.com/intelligentautomationbydesign/litmus">book a 45-min session →</a>'
+  }
+};
+
+const VERDICTS = {
+  "-1": { title: "Answer the three diagnostics above to see your score.", takeaway: "The verdict updates live as you answer." },
+  "0":  { title: "You're running a science experiment in production.", takeaway: "All three gaps open. Start with Step 1, the governance function, before scaling anything else." },
+  "1":  { title: "One foot in production, three feet still in the pilot.", takeaway: "Two of three gaps are open. Pick the unanswered diagnostic above and read the matching step." },
+  "2":  { title: "Close. One gap is enough to sink a deployment.", takeaway: "Identify the one ✗ above. The matching step is the single highest-leverage thing you can do this quarter." },
+  "3":  { title: "Production-ready by today's standard. You're the exception.", takeaway: "The next risk is drift. Step 6, continuous evaluation, is what keeps you here." }
+};
+
+// ============ STATE ============
+let state = { ...TWEAK_DEFAULTS, answers: { q1: null, q2: null, q3: null } };
+try {
+  const saved = JSON.parse(localStorage.getItem("litmusState") || "{}");
+  state = { ...state, ...saved, answers: { ...state.answers, ...(saved.answers || {}) } };
+} catch (e) {}
+
+function persist() {
+  try { localStorage.setItem("litmusState", JSON.stringify(state)); } catch (e) {}
+  // Inform host for tweak persistence
+  try {
+    window.parent.postMessage({
+      type: '__edit_mode_set_keys',
+      edits: { hero: state.hero, cta: state.cta, scorecard: state.scorecard }
+    }, '*');
+  } catch (e) {}
+}
+
+// ============ APPLY TWEAKS ============
+function applyTweaks() {
+  document.body.dataset.hero = state.hero;
+  document.body.dataset.cta = state.cta;
+  document.body.dataset.scorecard = state.scorecard;
+
+  // Tweak buttons
+  document.querySelectorAll('[data-tweak]').forEach(seg => {
+    const key = seg.dataset.tweak;
+    seg.querySelectorAll('button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.val === state[key] ? 'true' : 'false');
+    });
+  });
+
+  // CTA content
+  const c = CTA_CONTENT[state.cta] || CTA_CONTENT.book;
+  document.getElementById('ctaTitle').textContent = c.title;
+  document.getElementById('ctaBody').textContent = c.body;
+  document.getElementById('ctaBtnLabel').textContent = c.btn;
+  document.getElementById('ctaBtn').setAttribute('href', c.href);
+  document.getElementById('ctaSecondary').innerHTML = c.secondary;
+  document.getElementById('ctaSecondary').style.display = c.secondary ? '' : 'none';
+  document.getElementById('scoreCta').firstChild.nodeValue = c.btn;
+  document.getElementById('scoreCta').setAttribute('href', state.cta === 'email' ? c.href : '#cta');
+}
+
+// ============ SCORECARD ============
+function score() {
+  const a = state.answers;
+  const answered = ['q1','q2','q3'].filter(k => a[k] !== null);
+  if (answered.length < 3) return -1;
+  return ['q1','q2','q3'].filter(k => a[k] === 'yes').length;
+}
+
+function renderScore() {
+  const s = score();
+  const v = VERDICTS[String(s)];
+  const num = document.getElementById('scoreNum');
+  const ver = document.getElementById('scoreVerdict');
+  if (s === -1) {
+    const answered = ['q1','q2','q3'].filter(k => state.answers[k] !== null).length;
+    num.textContent = answered > 0 ? answered : '·';
+  } else {
+    num.textContent = s;
+  }
+  ver.innerHTML = v.title + '<span class="takeaway">' + v.takeaway + '</span>';
+}
+
+// ============ DIAGNOSTIC BUTTONS ============
+document.querySelectorAll('.diag').forEach(diag => {
+  const q = diag.dataset.q;
+  const fb = diag.querySelector('.diag__feedback');
+  const fbYes = fb.querySelector('[data-feedback="yes"]');
+  const fbNo  = fb.querySelector('[data-feedback="no"]');
+
+  diag.querySelectorAll('.diag__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.dataset.val;
+      state.answers[q] = state.answers[q] === val ? null : val;
+      // update visual
+      diag.querySelectorAll('.diag__btn').forEach(b => {
+        b.setAttribute('aria-pressed', b.dataset.val === state.answers[q] ? 'true' : 'false');
+      });
+      // feedback
+      if (state.answers[q] === 'yes') {
+        fb.classList.add('is-shown'); fbYes.hidden = false; fbNo.hidden = true;
+      } else if (state.answers[q] === 'no') {
+        fb.classList.add('is-shown'); fbYes.hidden = true; fbNo.hidden = false;
+      } else {
+        fb.classList.remove('is-shown'); fbYes.hidden = true; fbNo.hidden = true;
+      }
+      renderScore();
+      persist();
+    });
+  });
+
+  // restore on load
+  if (state.answers[q]) {
+    const val = state.answers[q];
+    diag.querySelector(`.diag__btn[data-val="${val}"]`).setAttribute('aria-pressed', 'true');
+    fb.classList.add('is-shown');
+    if (val === 'yes') fbYes.hidden = false; else fbNo.hidden = false;
+  }
+});
+
+document.getElementById('scoreReset').addEventListener('click', () => {
+  state.answers = { q1: null, q2: null, q3: null };
+  document.querySelectorAll('.diag__btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  document.querySelectorAll('.diag__feedback').forEach(fb => {
+    fb.classList.remove('is-shown');
+    fb.querySelectorAll('[data-feedback]').forEach(s => s.hidden = true);
+  });
+  renderScore();
+  persist();
+});
+
+// ============ TWEAK BUTTONS ============
+document.querySelectorAll('[data-tweak] button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.closest('[data-tweak]').dataset.tweak;
+    state[key] = btn.dataset.val;
+    applyTweaks();
+    persist();
+  });
+});
+
+// ============ TWEAKS PANEL (host protocol) ============
+const panel = document.getElementById('tweaks');
+const closeBtn = document.getElementById('tweaksClose');
+
+window.addEventListener('message', (e) => {
+  if (!e.data || !e.data.type) return;
+  if (e.data.type === '__activate_edit_mode') panel.classList.add('is-open');
+  if (e.data.type === '__deactivate_edit_mode') panel.classList.remove('is-open');
+});
+
+closeBtn.addEventListener('click', () => {
+  panel.classList.remove('is-open');
+  try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {}
+});
+
+// Announce after listener is in place
+try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+
+// ============ INIT ============
+applyTweaks();
+renderScore();
+</script>
+
+</body>
+</html>
