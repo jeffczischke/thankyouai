@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your GenAI Investment Isn't Broken. Its Foundation Might Be. | Intelligent Automation By Design</title>
+<meta name="description" content="Most enterprise GenAI deployments skip the deterministic layer. Here's what to fix without throwing away the work. By Jeff Czischke, Intelligent Automation By Design.">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink-900);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: var(--fulcrum-navy); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ========== layout primitives ========== */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 56px; }
+  .wrap--narrow { max-width: 860px; margin: 0 auto; padding: 0 56px; }
+
+  /* ========== top chrome ========== */
+  .topbar {
+    border-top: 4px solid var(--fulcrum-navy);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 30;
+    backdrop-filter: saturate(180%) blur(8px);
+    background: rgba(255,255,255,0.92);
+  }
+  .topbar__inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 56px;
+    max-width: 1180px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: baseline; gap: 16px; }
+  .brand__mark {
+    font-weight: 700; font-size: 12px; letter-spacing: 0.10em;
+    color: var(--fulcrum-navy);
+    white-space: nowrap;
+  }
+  .brand__byline {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 14px; color: var(--ink-500);
+  }
+  .brand__byline em { font-style: italic; color: var(--fulcrum-navy); font-weight: 500; }
+  .brand__byline::before {
+    content: "·"; margin: 0 12px; color: var(--ink-300); font-style: normal;
+  }
+  .topbar__meta {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--ink-500); letter-spacing: 0.04em;
+    display: flex; gap: 24px; align-items: center;
+    white-space: nowrap;
+  }
+  .topbar__meta a:hover { color: var(--fulcrum-navy); }
+
+  /* ========== HERO ========== */
+  .hero {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0 80px;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 72px;
+    align-items: end;
+  }
+  .hero__kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 28px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .hero__kicker::after {
+    content: ""; height: 1px; width: 80px; background: rgba(255,255,255,0.25);
+  }
+  .hero__title {
+    font-size: 56px;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+    color: #fff;
+    text-wrap: balance;
+    margin: 0 0 32px;
+  }
+  .hero__title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+  }
+  .hero__lede {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.78);
+    max-width: 520px;
+    margin: 0 0 36px;
+    text-wrap: pretty;
+  }
+  .hero__meta {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 48px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    width: fit-content;
+  }
+  .hero__meta dt {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .hero__meta dd {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #fff;
+    margin: 0;
+  }
+
+  /* ========== Tier stack (hero right) ========== */
+  .tierstack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tierstack__label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+  }
+  .tier {
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    background: rgba(255,255,255,0.02);
+    transition: background var(--dur-base) var(--ease-standard);
+  }
+  .tier__n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.04em;
+  }
+  .tier__title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.005em;
+    margin: 0 0 2px;
+    line-height: 1.3;
+  }
+  .tier__sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.35;
+  }
+  .tier__tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+  }
+  .tier--top { background: rgba(255,255,255,0.06); }
+  .tier--orchestration {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.04);
+    position: relative;
+  }
+  .tier--orchestration .tier__tag {
+    background: var(--fulcrum-forest);
+    border-color: var(--fulcrum-forest);
+    color: #fff;
+  }
+  .tier--bottom {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.03);
+  }
+  .tierstack__caption {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.4);
+    margin-top: 10px;
+    line-height: 1.45;
+  }
+
+  /* ========== Anchor strip (replaces KPIs) ========== */
+  .anchors {
+    background: var(--fulcrum-sand);
+    border-bottom: 1px solid var(--border);
+  }
+  .anchors__inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 40px 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .anchor {
+    padding: 0 32px;
+    border-right: 1px solid rgba(0,51,102,0.15);
+  }
+  .anchor:first-child { padding-left: 0; }
+  .anchor:last-child { border-right: 0; padding-right: 0; }
+  .anchor__n {
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--fulcrum-navy);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 12px;
+  }
+  .anchor__n .unit { font-size: 22px; font-weight: 400; margin-left: 2px; color: var(--ink-600); }
+  .anchor__label {
+    font-size: 13px;
+    color: var(--ink-700);
+    line-height: 1.4;
+    text-wrap: balance;
+    margin-bottom: 8px;
+  }
+  .anchor__src {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.04em;
+    color: var(--ink-500);
+    text-transform: uppercase;
+  }
+
+  /* ========== editorial body ========== */
+  section.essay { padding: 88px 0; }
+  section.essay--tight { padding: 72px 0 24px; }
+  section.essay--sand { background: var(--fulcrum-sand); }
+  .essay h2.section-title {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: var(--fulcrum-navy);
+    margin: 0 0 32px;
+    text-wrap: balance;
+  }
+  .essay h2.section-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .essay p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-800);
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+  .essay p strong { color: var(--ink-900); font-weight: 600; }
+  .essay p em { font-family: var(--font-serif); font-style: italic; color: var(--ink-700); }
+  .essay p.lede {
+    font-size: 22px; line-height: 1.5;
+    color: var(--ink-700);
+    font-family: var(--font-serif);
+    font-style: italic;
+    text-wrap: balance;
+    margin-bottom: 28px;
+  }
+  .essay .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .pull {
+    border-left: 3px solid var(--fulcrum-navy);
+    padding: 4px 0 4px 28px;
+    margin: 36px 0;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--fulcrum-navy);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .pull cite {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    font-style: normal;
+    color: var(--ink-500);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  /* Story callout */
+  .story {
+    background: var(--ink-50);
+    border-left: 3px solid var(--fulcrum-navy);
+    padding: 32px 36px;
+    margin: 32px 0 40px;
+  }
+  .story__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 14px;
+  }
+  .story__body {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink-800);
+    margin: 0;
+  }
+  .story__body em { font-style: italic; color: var(--fulcrum-navy); }
+  .story__quote {
+    display: block;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--fulcrum-navy);
+  }
+
+  /* ========== Architecture diagram block ========== */
+  .arch {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 48px 56px;
+    margin: 40px 0 0;
+    position: relative;
+  }
+  .arch__head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 36px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .arch__title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin: 0;
+  }
+  .arch__legend {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-500);
+    display: flex; gap: 24px;
+  }
+  .arch__legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .arch__legend .sw { width: 12px; height: 12px; display: inline-block; }
+  .arch__legend .sw--stay { background: var(--paper); border: 1px solid var(--border-strong); }
+  .arch__legend .sw--change { background: var(--fulcrum-forest); }
+
+  .arch__stack {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-strong);
+  }
+  .arch__row {
+    display: contents;
+  }
+  .arch__row > * {
+    border-bottom: 1px solid var(--border-strong);
+    padding: 24px 28px;
+  }
+  .arch__row:last-child > * { border-bottom: 0; }
+  .arch__tier {
+    background: var(--ink-50);
+    border-right: 1px solid var(--border-strong);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .arch__tier small {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-500);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .arch__cell {
+    border-right: 1px solid var(--border-strong);
+  }
+  .arch__cell:last-child { border-right: 0; }
+  .arch__cell h4 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-700);
+    margin: 0 0 10px;
+  }
+  .arch__cell p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-700);
+    margin: 0;
+  }
+  .arch__cell--change {
+    background: var(--fulcrum-forest-soft);
+  }
+  .arch__cell--change h4 {
+    color: var(--fulcrum-forest);
+  }
+  .arch__cell--change p { color: var(--ink-800); }
+  .arch__cell--change strong { color: var(--fulcrum-forest); }
+
+  /* ========== Paths comparison ========== */
+  .paths {
+    padding: 88px 0;
+    background: var(--paper);
+  }
+  .paths__head {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    padding: 0 56px;
+  }
+  .paths__grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--fulcrum-navy);
+  }
+  .path {
+    padding: 36px 32px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+  .path:last-child { border-right: 0; }
+  .path__rank {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-500);
+    margin-bottom: 4px;
+  }
+  .path__title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin: 0;
+    letter-spacing: -0.012em;
+  }
+  .path__verdict {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-600);
+    line-height: 1.4;
+    margin: 0 0 12px;
+  }
+  .path__list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-700);
+  }
+  .path__list li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .path__list .mark {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-400);
+    line-height: 1.4;
+  }
+  .path__list .mark--plus { color: var(--fulcrum-forest); }
+  .path__list .mark--minus { color: var(--ink-400); }
+  .path__fit {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+    font-size: 12px;
+    color: var(--ink-500);
+    line-height: 1.45;
+  }
+  .path__fit strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    color: var(--fulcrum-navy);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .path--rec {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    border-right-color: var(--fulcrum-navy-deep);
+  }
+  .path--rec .path__rank { color: rgba(255,255,255,0.55); }
+  .path--rec .path__title { color: #fff; }
+  .path--rec .path__verdict { color: rgba(255,255,255,0.75); }
+  .path--rec .path__list { color: rgba(255,255,255,0.85); }
+  .path--rec .path__list .mark--plus { color: var(--fulcrum-forest-soft); }
+  .path--rec .path__list .mark--minus { color: rgba(255,255,255,0.45); }
+  .path--rec .path__fit { border-top-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); }
+  .path--rec .path__fit strong { color: rgba(255,255,255,0.95); }
+  .path--rec .path__badge {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--fulcrum-forest);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ========== BOTTOM LINE ========== */
+  .bottom {
+    background: var(--fulcrum-sand);
+    padding: 96px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .bottom__inner {
+    max-width: 860px; margin: 0 auto;
+    padding: 0 56px;
+  }
+  .bottom__label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 24px;
+  }
+  .bottom__title {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 42px;
+    line-height: 1.18;
+    letter-spacing: -0.018em;
+    color: var(--fulcrum-navy);
+    text-wrap: balance;
+    margin: 0 0 28px;
+  }
+  .bottom__body p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-800);
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+  .bottom__body strong { color: var(--ink-900); font-weight: 600; }
+
+  /* ========== CTA panel ========== */
+  .cta {
+    padding: 88px 0;
+    background: var(--paper);
+  }
+  .cta__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .cta__card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+  }
+  .cta__card--primary {
+    background: var(--fulcrum-navy-deep);
+    color: #fff;
+    border: 1px solid var(--fulcrum-navy-deep);
+  }
+  .cta__label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fulcrum-navy);
+    margin-bottom: 18px;
+  }
+  .cta__card--primary .cta__label { color: rgba(255,255,255,0.55); }
+  .cta__title {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    color: var(--ink-900);
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .cta__card--primary .cta__title { color: #fff; }
+  .cta__body {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-700);
+    margin: 0 0 28px;
+    text-wrap: pretty;
+    flex: 1;
+  }
+  .cta__card--primary .cta__body { color: rgba(255,255,255,0.78); }
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    background: var(--fulcrum-navy);
+    color: #fff;
+    border: 1px solid var(--fulcrum-navy);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-standard);
+    align-self: flex-start;
+  }
+  .cta__btn:hover { background: var(--fulcrum-navy-deep); border-color: var(--fulcrum-navy-deep); }
+  .cta__btn:active { transform: translateY(1px); }
+  .cta__card--primary .cta__btn {
+    background: #fff; color: var(--fulcrum-navy); border-color: #fff;
+  }
+  .cta__card--primary .cta__btn:hover { background: var(--fulcrum-sand); }
+  .cta__btn .arrow { width: 14px; height: 14px; }
+
+  .cta__secondary {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center; gap: 6px;
+    font-size: 12px;
+    color: var(--ink-500);
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  .cta__card--primary .cta__secondary { color: rgba(255,255,255,0.5); }
+  .cta__secondary a { color: var(--fulcrum-navy); border-bottom: 1px solid var(--border-strong); }
+  .cta__card--primary .cta__secondary a { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+  /* ========== AUTHOR ========== */
+  .author {
+    padding: 64px 0 80px;
+    border-top: 1px solid var(--border);
+  }
+  .author__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .author__portrait {
+    width: 180px; height: 220px;
+    background: var(--ink-100);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .author__portrait::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(135deg, var(--fulcrum-navy-soft) 0%, var(--fulcrum-navy) 50%, var(--fulcrum-navy-deep) 100%);
+    opacity: 0.92;
+  }
+  .author__initials {
+    position: relative; z-index: 1;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 80px;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: -0.04em;
+  }
+  .author__name {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin: 0 0 6px;
+    letter-spacing: -0.012em;
+  }
+  .author__role {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-500);
+    margin: 0 0 22px;
+  }
+  .author__bio {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    margin: 0 0 24px;
+    max-width: 680px;
+    text-wrap: pretty;
+  }
+  .author__bio em { font-family: var(--font-serif); font-style: italic; color: var(--fulcrum-navy); font-weight: 500; }
+  .author__links {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .author__link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    color: var(--fulcrum-navy);
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-standard);
+  }
+  .author__link:hover {
+    border-color: var(--fulcrum-navy);
+    background: var(--ink-50);
+  }
+
+  /* ========== FOOTER ========== */
+  footer.foot {
+    background: var(--fulcrum-navy-deep);
+    color: rgba(255,255,255,0.6);
+    padding: 48px 0 64px;
+  }
+  .foot__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  .foot__top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    margin-bottom: 28px;
+  }
+  .foot__brand {
+    font-weight: 700; font-size: 13px; letter-spacing: 0.14em;
+    color: #fff;
+  }
+  .foot__nav {
+    display: flex; gap: 32px; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.04em;
+  }
+  .foot__nav a { color: rgba(255,255,255,0.7); }
+  .foot__nav a:hover { color: #fff; }
+  .foot__meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+  }
+  .foot__meta .sep { margin: 0 12px; color: rgba(255,255,255,0.3); }
+
+  /* ========== responsive ========== */
+  @media (max-width: 1100px) {
+    .hero { padding: 72px 0 56px; }
+    .hero__grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero__title { font-size: 48px; }
+    .arch { padding: 36px 32px; }
+    .cta__inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 860px) {
+    .wrap, .wrap--narrow { padding: 0 24px; }
+    .topbar__inner { padding: 14px 24px; flex-wrap: wrap; gap: 8px 16px; }
+    .topbar__meta { font-size: 10px; gap: 14px; }
+    .brand { flex-wrap: wrap; gap: 6px 12px; }
+    .brand__byline::before { display: none; }
+    .hero { padding: 56px 0 40px; }
+    .hero__title { font-size: 34px; }
+    .hero__lede { font-size: 18px; }
+    .hero__meta { grid-template-columns: 1fr; gap: 18px; }
+    .tier { grid-template-columns: 24px 1fr; padding: 14px 16px; }
+    .tier__tag { display: none; }
+    .anchors__inner { grid-template-columns: repeat(2, 1fr); gap: 24px 0; padding: 32px 24px; }
+    .anchor { border-right: 0; padding: 0 16px; border-bottom: 1px solid rgba(0,51,102,0.15); padding-bottom: 24px; }
+    .anchor:nth-child(odd) { padding-left: 0; }
+    .anchor:nth-child(even) { padding-right: 0; }
+    .anchor:nth-last-child(-n+2) { border-bottom: 0; padding-bottom: 0; }
+    .anchor__n { font-size: 34px; }
+    section.essay { padding: 64px 0; }
+    .essay h2.section-title { font-size: 28px; }
+    .essay p.lede { font-size: 19px; }
+    .arch { padding: 24px 20px; }
+    .arch__head { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .arch__legend { gap: 16px; }
+    .arch__stack { grid-template-columns: 1fr; }
+    .arch__row > * { border-right: 0 !important; padding: 20px 22px; }
+    .arch__tier { border-right: 0; border-bottom: 1px solid var(--border-strong); }
+    .pull { font-size: 19px; padding-left: 20px; margin: 28px 0; }
+    .paths { padding: 64px 0; }
+    .paths__head { padding: 0 24px; }
+    .paths__grid { grid-template-columns: 1fr; padding: 0 24px; }
+    .path { border-right: 0; }
+    .bottom { padding: 64px 0; }
+    .bottom__inner { padding: 0 24px; }
+    .bottom__title { font-size: 26px; }
+    .bottom__body p { font-size: 16px; }
+    .cta { padding: 64px 0; }
+    .cta__inner { padding: 0 24px; }
+    .cta__card { padding: 28px; }
+    .cta__title { font-size: 22px; }
+    .author { padding: 48px 0 64px; }
+    .author__inner { grid-template-columns: 1fr; gap: 24px; padding: 0 24px; }
+    .author__portrait { width: 120px; height: 150px; }
+    .author__initials { font-size: 56px; }
+    .foot__inner { padding: 0 24px; }
+    .foot__top { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .foot__nav { gap: 20px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP CHROME ============ -->
+<header class="topbar" data-screen-label="00 Topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark">INTELLIGENT AUTOMATION BY DESIGN</span>
+      <span class="brand__byline">A publication of the <em>ThankYouAI</em> newsletter</span>
+    </div>
+    <div class="topbar__meta">
+      <span>6 min read</span>
+      <span>·</span>
+      <a href="#cta">Talk to Jeff →</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="01 Hero">
+  <div class="wrap">
+    <div class="hero__grid">
+      <div>
+        <div class="hero__kicker">The Foundation Problem</div>
+        <h1 class="hero__title">Your GenAI investment isn't broken. <em>Its foundation might be.</em></h1>
+        <p class="hero__lede">Three years in, the excitement is gone and people are quietly going back to their old spreadsheets. The model isn't the problem. The layer underneath it is.</p>
+        <dl class="hero__meta">
+          <div>
+            <dt>Author</dt>
+            <dd>Jeff Czischke</dd>
+          </div>
+          <div>
+            <dt>Publication</dt>
+            <dd>The ThankYouAI Newsletter</dd>
+          </div>
+          <div>
+            <dt>Published</dt>
+            <dd>May 2026</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <div class="tierstack__label">The three-tier architecture</div>
+        <div class="tierstack">
+          <div class="tier tier--top">
+            <span class="tier__n">03</span>
+            <div>
+              <h3 class="tier__title">LLM interface</h3>
+              <div class="tier__sub">Copilot, ChatGPT, your custom tool</div>
+            </div>
+            <span class="tier__tag">Stays</span>
+          </div>
+          <div class="tier tier--orchestration">
+            <span class="tier__n">02</span>
+            <div>
+              <h3 class="tier__title">Orchestration &amp; guardrails</h3>
+              <div class="tier__sub">Routes the request, enforces policy, writes the audit trail, escalates exceptions to humans</div>
+            </div>
+            <span class="tier__tag">New</span>
+          </div>
+          <div class="tier tier--bottom">
+            <span class="tier__n">01</span>
+            <div>
+              <h3 class="tier__title">Deterministic data layer</h3>
+              <div class="tier__sub">ERP · GL · AP · operational databases — structured, governed, connected</div>
+            </div>
+            <span class="tier__tag">Stays</span>
+          </div>
+        </div>
+        <p class="tierstack__caption">The interface your people use stays. The data they rely on stays. The middle layer is the work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANCHORS ============ -->
+<section class="anchors" data-screen-label="02 Anchors" aria-label="Key facts">
+  <div class="anchors__inner">
+    <div class="anchor">
+      <div class="anchor__n">3<span class="unit">&nbsp;yrs</span></div>
+      <div class="anchor__label">A typical enterprise AI roadmap before the energy starts to fade.</div>
+      <div class="anchor__src">Source · Field pattern</div>
+    </div>
+    <div class="anchor">
+      <div class="anchor__n">3<span class="unit">&nbsp;tiers</span></div>
+      <div class="anchor__label">Interface, orchestration, deterministic data. The middle one is what's missing.</div>
+      <div class="anchor__src">Source · The architecture</div>
+    </div>
+    <div class="anchor">
+      <div class="anchor__n">3<span class="unit">&nbsp;paths</span></div>
+      <div class="anchor__label">Build from scratch, buy a packaged tool, or evolve what you already have.</div>
+      <div class="anchor__src">Source · Scoping framework</div>
+    </div>
+    <div class="anchor">
+      <div class="anchor__n">70<span class="unit">&nbsp;days</span></div>
+      <div class="anchor__label">From discovery to first production automation, same team start to finish.</div>
+      <div class="anchor__src">Source · IABD engagement model</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="essay essay--tight" data-screen-label="03 Intro">
+  <div class="wrap--narrow">
+    <span class="label">The tell</span>
+    <p class="lede">A Fortune 500 retailer's CIO walked me through their AI roadmap recently. Three years of work. Copilot deployed across the enterprise. A custom LLM interface their internal team had built. Pilots in finance, operations, supply chain. The kind of roadmap most companies are still trying to get approved.</p>
+
+    <div class="story">
+      <div class="story__label">What he said next</div>
+      <p class="story__body">"The excitement is gone. People are going back to their old spreadsheets."</p>
+    </div>
+
+    <p>That sentence is the tell. Not the hallucinations, though those came up too. Not the auditor questions, though those were real. The tell is when employees who were genuinely energized by early results quietly decide the old way is more reliable. <strong>That shift is hard to reverse once it sets in.</strong> And it happens for one reason more than any other.</p>
+    <p>The architecture never had a foundation.</p>
+  </div>
+</section>
+
+<!-- ============ DIAGNOSIS ============ -->
+<section class="essay" data-screen-label="04 The model is doing exactly what you told it to">
+  <div class="wrap--narrow">
+    <h2 class="section-title">The model is doing exactly what you <em>told it to do.</em></h2>
+
+    <p>When AI outputs are inconsistent, the instinct is to blame the model. Upgrade the prompt. Try a different LLM. Buy a better tool. I understand the instinct. It's where the money goes and it's where the vendor conversations happen.</p>
+    <p>But most of the time, the model is performing correctly. It's probabilistic. It generates the most statistically likely answer based on what it can see. If what it can see is incomplete, inconsistently governed, or stitched together from whatever data happened to be accessible at deployment time, <strong>inconsistent outputs aren't a bug. They're the expected result.</strong></p>
+
+    <div class="pull">Most enterprise GenAI deployments skip the deterministic layer: a structured, governed, auditable data foundation that sits between your raw operational data and your LLM.
+      <cite>Jeff Czischke · The Foundation Problem</cite>
+    </div>
+
+    <p>That's where facts live. Where business rules get enforced programmatically instead of hoped for probabilistically. Where exceptions route to a human instead of quietly producing a confident-sounding wrong answer in a finance report.</p>
+    <p>Without it, you're asking a probabilistic system to do a deterministic job. <strong>It will fail on a schedule.</strong> And your best people will notice first.</p>
+  </div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="essay essay--sand" data-screen-label="05 What changes, what stays">
+  <div class="wrap">
+    <div style="max-width: 760px;">
+      <span class="label">The conversation I have with every CIO</span>
+      <h2 class="section-title">What actually changes, and what stays <em>exactly as it is.</em></h2>
+      <p>You don't have to throw any of it away. The interface your teams use every day stays. Your Microsoft EA, your Anthropic agreement, your OpenAI contract: all intact. <strong>No new vendor relationships. No procurement reviews. No change management project to convince people to use a different interface.</strong></p>
+      <p>What changes is what sits underneath.</p>
+    </div>
+
+    <div class="arch">
+      <div class="arch__head">
+        <h3 class="arch__title">The three-tier architecture · what stays vs. what's new</h3>
+        <div class="arch__legend">
+          <span><span class="sw sw--stay"></span> Stays as-is</span>
+          <span><span class="sw sw--change"></span> The new work</span>
+        </div>
+      </div>
+
+      <div class="arch__stack">
+        <div class="arch__row">
+          <div class="arch__tier">Tier 03<small>Top</small></div>
+          <div class="arch__cell">
+            <h4>LLM Interface</h4>
+            <p>Copilot, ChatGPT, your custom internal tool. The thing your people open every morning.</p>
+          </div>
+          <div class="arch__cell">
+            <h4>Status</h4>
+            <p><strong>Leave it alone.</strong> Existing contracts intact, no relearning, no change-management lift.</p>
+          </div>
+        </div>
+
+        <div class="arch__row">
+          <div class="arch__tier">Tier 02<small>Middle</small></div>
+          <div class="arch__cell arch__cell--change">
+            <h4>Orchestration Layer</h4>
+            <p>Decides which tasks go through deterministic logic and which reach the LLM. Enforces guardrails. Writes audit trails. Routes exceptions to humans.</p>
+          </div>
+          <div class="arch__cell arch__cell--change">
+            <h4>Status</h4>
+            <p><strong>This is the work.</strong> The layer that turns demo-day magic into a system finance trusts at month-end close.</p>
+          </div>
+        </div>
+
+        <div class="arch__row">
+          <div class="arch__tier">Tier 01<small>Foundation</small></div>
+          <div class="arch__cell">
+            <h4>Deterministic Data</h4>
+            <p>ERP, GL, AP records, operational databases. Structured, governed, properly connected.</p>
+          </div>
+          <div class="arch__cell">
+            <h4>Status</h4>
+            <p><strong>Already there.</strong> No migration project, no pre-cleanup program. Instrument what exists, correctly, from day one.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 760px; margin-top: 40px;">
+      <p>Your Copilot doesn't get smarter. <strong>Your data gets reliable.</strong> That's the difference between a demo that impresses in a boardroom and a system your finance team trusts at month-end close.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OBJECTION ============ -->
+<section class="essay" data-screen-label="06 The data isn't clean enough">
+  <div class="wrap--narrow">
+    <span class="label">The objection</span>
+    <h2 class="section-title">"Our data isn't clean enough."</h2>
+    <p>I hear this in almost every first conversation. I understand why it sounds responsible. <strong>In practice, I've watched it delay meaningful work for a year or more</strong> while organizations wait for a data governance initiative that never quite reaches done.</p>
+    <p>The automation programs I've seen deliver finance-grade results were built on existing ERP data. No pre-cleanup program. No migration project before anyone was allowed to start. The data was already good enough. It just needed the right architecture to make it usable.</p>
+
+    <div class="pull">That distinction matters. It moves the conversation from <em>"we can't begin until everything is perfect"</em> to <em>"we begin now, on what we have, and we instrument it correctly from Day 1."</em></div>
+  </div>
+</section>
+
+<!-- ============ PATHS ============ -->
+<section class="paths" data-screen-label="07 Three paths">
+  <div class="paths__head">
+    <span class="label">Three paths</span>
+    <h2 class="section-title" style="margin-bottom: 16px;">Three options. <em>Honestly mapped.</em></h2>
+    <p style="font-size: 17px; line-height: 1.6; color: var(--ink-700); margin: 0; text-wrap: pretty;">When I scope this kind of work, the same three options come up every time. Most organizations don't need the first two.</p>
+  </div>
+
+  <div class="paths__grid">
+    <article class="path">
+      <div class="path__rank">Path 01</div>
+      <h3 class="path__title">Build from scratch</h3>
+      <p class="path__verdict">Net-new infrastructure, designed from the ground up.</p>
+      <ul class="path__list">
+        <li><span class="mark mark--plus">+</span><span>Right for greenfield environments or AI investments genuinely broken beyond repair.</span></li>
+        <li><span class="mark mark--minus">−</span><span>Means writing off years of work and training.</span></li>
+        <li><span class="mark mark--minus">−</span><span>Slow. The slowest of the three options.</span></li>
+      </ul>
+      <div class="path__fit">
+        <strong>Best fit</strong>
+        Net-new programs with no existing AI investment to protect.
+      </div>
+    </article>
+
+    <article class="path">
+      <div class="path__rank">Path 02</div>
+      <h3 class="path__title">Buy a packaged solution</h3>
+      <p class="path__verdict">A vendor product that handles one use case end-to-end.</p>
+      <ul class="path__list">
+        <li><span class="mark mark--plus">+</span><span>Works for commodity processes with limited customization.</span></li>
+        <li><span class="mark mark--minus">−</span><span>Rarely scales past the first use case.</span></li>
+        <li><span class="mark mark--minus">−</span><span>Builds vendor dependency without building any internal capability.</span></li>
+      </ul>
+      <div class="path__fit">
+        <strong>Best fit</strong>
+        A single, well-bounded, commodity process you can wall off from the rest.
+      </div>
+    </article>
+
+    <article class="path path--rec">
+      <div class="path__badge">Recommended</div>
+      <div class="path__rank">Path 03</div>
+      <h3 class="path__title">Evolve what you have</h3>
+      <p class="path__verdict">Layer deterministic intelligence under the tools you already run.</p>
+      <ul class="path__list">
+        <li><span class="mark mark--plus">+</span><span>Protects current contracts and existing investment.</span></li>
+        <li><span class="mark mark--plus">+</span><span>Builds on what your people already know how to use.</span></li>
+        <li><span class="mark mark--plus">+</span><span>Discovery to first production automation in <strong style="color:#fff;">70 days</strong>, same team start to finish.</span></li>
+      </ul>
+      <div class="path__fit">
+        <strong>Best fit</strong>
+        Organizations already invested in AI that need those investments to actually perform.
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ BOTTOM LINE ============ -->
+<section class="bottom" data-screen-label="08 Bottom line">
+  <div class="bottom__inner">
+    <div class="bottom__label">The question worth sitting with</div>
+    <h2 class="bottom__title">What does our current architecture assume about data reliability, and has that assumption ever actually been tested?</h2>
+    <div class="bottom__body">
+      <p>Most organizations made a reasonable assumption when they started their AI journey: that their data was good enough to produce reliable outputs. They just never tested that assumption. When the pilots worked, nobody asked why. When they didn't, everyone blamed the model.</p>
+      <p>The question isn't <strong>"should we build or buy?"</strong> It's the one above. If the answer is <em>no</em>, that's where the work starts. <strong>And it doesn't require starting over.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="cta" data-screen-label="09 CTA">
+  <div class="cta__inner">
+    <div class="cta__card cta__card--primary">
+      <div class="cta__label">Subscribe · Free</div>
+      <h3 class="cta__title">The ThankYouAI Newsletter.</h3>
+      <p class="cta__body">Practical frameworks for enterprise AI programs that have to work in the real world, not just in demos. Written for the leaders making the call, not the analysts writing the report.</p>
+      <a href="https://www.linkedin.com/article/edit/7465184283834355712/" target="_blank" rel="noopener" class="cta__btn">
+        Subscribe on LinkedIn
+        <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </a>
+      <div class="cta__secondary">
+        Or <a href="https://www.linkedin.com/article/edit/7465184283834355712/" target="_blank" rel="noopener">read this issue on LinkedIn →</a>
+      </div>
+    </div>
+
+    <div class="cta__card">
+      <div class="cta__label">Or, talk it through</div>
+      <h3 class="cta__title">A conversation about what this looks like inside your organization.</h3>
+      <p class="cta__body">If you're three years into a GenAI program and the energy is fading, the fastest way to know whether the foundation is the issue is to talk through it with someone who has seen the pattern.</p>
+      <a href="mailto:jeff.czischke@fulcrumlabsinc.com?subject=Foundation%20Problem%20%E2%80%94%20Let's%20talk" class="cta__btn">
+        Reach out directly
+        <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </a>
+      <div class="cta__secondary">
+        jeff.czischke@fulcrumlabsinc.com
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTHOR ============ -->
+<section class="author" data-screen-label="10 Author">
+  <div class="author__inner">
+    <div class="author__portrait" aria-hidden="true">
+      <span class="author__initials">JC</span>
+    </div>
+    <div>
+      <h3 class="author__name">Jeff Czischke</h3>
+      <p class="author__role">Founder · Intelligent Automation By Design · Enterprise AI &amp; Automation</p>
+      <p class="author__bio">Jeff has built and scaled enterprise AI programs from the ground up, including a federated AI Center of Excellence serving 14 business units. He advises leaders on AI governance, agentic systems, and responsible AI at scale. <em>Intelligent Automation By Design</em> builds production-grade agentic systems for Finance, Operations, and HR — 70 days from discovery to first production automation, same team start to finish. This essay was first published in <em>The ThankYouAI Newsletter</em>.</p>
+      <div class="author__links">
+        <a class="author__link" href="https://www.linkedin.com/article/edit/7465184283834355712/" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn article</a>
+        <a class="author__link" href="mailto:jeff.czischke@fulcrumlabsinc.com">jeff.czischke@fulcrumlabsinc.com</a>
+        <a class="author__link" href="index.html">Read the prior issue →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot" data-screen-label="11 Footer">
+  <div class="foot__inner">
+    <div class="foot__top">
+      <div class="foot__brand">INTELLIGENT AUTOMATION BY DESIGN</div>
+      <nav class="foot__nav">
+        <a href="#">The architecture</a>
+        <a href="#">Three paths</a>
+        <a href="#cta">Talk to Jeff</a>
+        <a href="https://www.linkedin.com/article/edit/7465184283834355712/" target="_blank" rel="noopener">Subscribe to ThankYouAI →</a>
+      </nav>
+    </div>
+    <div class="foot__meta">
+      © 2026 Intelligent Automation By Design<span class="sep">·</span>A publication of the ThankYouAI newsletter<span class="sep">·</span>Confidential to recipient
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
